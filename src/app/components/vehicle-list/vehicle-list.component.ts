@@ -4,8 +4,10 @@ import { RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { VehicleService } from '../../services/vehicle.service';
 import { IVehicleModel } from '../../models/vehicle.model';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -16,6 +18,7 @@ import { IVehicleModel } from '../../models/vehicle.model';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
   ],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.scss'],
@@ -31,7 +34,10 @@ export class VehicleListComponent implements OnInit {
   ];
   dataSource: IVehicleModel[] = [];
 
-  constructor(private vehicleService: VehicleService) {}
+  constructor(
+    private vehicleService: VehicleService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadVehicles();
@@ -42,9 +48,21 @@ export class VehicleListComponent implements OnInit {
   }
 
   deleteVehicle(id: number): void {
-    if (confirm('Tem certeza que deseja excluir este veículo?')) {
-      this.vehicleService.delete(id);
-      this.loadVehicles();
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Confirmar Exclusão',
+        message: 'Tem certeza que deseja excluir este veículo?',
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.vehicleService.delete(id);
+        this.loadVehicles();
+      }
+    });
   }
 }
