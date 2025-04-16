@@ -1,7 +1,7 @@
 .container {
+  padding: 20px;
   max-width: 1200px;
   margin: 48px auto;
-  padding: 32px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -10,7 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
 
     h2 {
       margin: 0;
@@ -29,6 +29,11 @@
         margin-right: 8px;
       }
     }
+  }
+
+  .search-field {
+    width: 100%;
+    margin-bottom: 20px;
   }
 
   table {
@@ -76,7 +81,7 @@
         }
 
         &.edit-button {
-          color: #1976d2;
+          color: #2196f3;
 
           &:hover {
             background-color: #e3f2fd;
@@ -84,6 +89,23 @@
         }
       }
     }
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .confirm-button {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .cancel-button {
+    background-color: #f44336;
+    color: white;
   }
 }
 

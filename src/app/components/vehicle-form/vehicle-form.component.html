@@ -4,12 +4,17 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Placa</mat-label>
-      <input matInput formControlName="placa" placeholder="Ex: ABC-1234" />
+      <input
+        matInput
+        formControlName="placa"
+        placeholder="Ex: ABC-1234 ou ABC1D23"
+      />
       <mat-error *ngIf="form.get('placa')?.hasError('required')">
         Placa é obrigatória
       </mat-error>
       <mat-error *ngIf="form.get('placa')?.hasError('pattern')">
-        Formato inválido (ABC-1234 ou ABC1234)
+        Formato inválido. Use: ABC-1234 (padrão antigo) ou ABC1D23 (padrão
+        Mercosul)
       </mat-error>
     </mat-form-field>
 

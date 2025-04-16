@@ -44,7 +44,12 @@ export class VehicleFormComponent implements OnInit {
     this.form = this.fb.group({
       placa: [
         '',
-        [Validators.required, Validators.pattern(/^[A-Z]{3}-?\d{4}$/)],
+        [
+          Validators.required,
+          Validators.pattern(
+            /^[A-HJ-NPR-Z]{3}[0-9][A-HJ-NPR-Z][0-9]{2}$|^[A-HJ-NPR-Z]{3}-?[0-9]{4}$/
+          ),
+        ],
       ],
       chassi: [
         '',
