@@ -13,7 +13,74 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- @note(deverebor): add more form fields -->
+    <mat-form-field appearance="fill">
+      <mat-label>Chassi</mat-label>
+      <input
+        matInput
+        formControlName="chassi"
+        placeholder="Ex: 9BWZZZ377VT004251"
+      />
+      <mat-error *ngIf="form.get('chassi')?.hasError('required')">
+        Chassi é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('chassi')?.hasError('pattern')">
+        Chassi deve ter 17 caracteres alfanuméricos
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Renavam</mat-label>
+      <input matInput formControlName="renavam" placeholder="Ex: 00123456789" />
+      <mat-error *ngIf="form.get('renavam')?.hasError('required')">
+        Renavam é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('renavam')?.hasError('pattern')">
+        Renavam deve ter 11 dígitos
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Marca</mat-label>
+      <input matInput formControlName="marca" placeholder="Ex: Toyota" />
+      <mat-error *ngIf="form.get('marca')?.hasError('required')">
+        Marca é obrigatória
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Modelo</mat-label>
+      <input matInput formControlName="modelo" placeholder="Ex: Corolla" />
+      <mat-error *ngIf="form.get('modelo')?.hasError('required')">
+        Modelo é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Ano</mat-label>
+      <input
+        matInput
+        formControlName="ano"
+        type="number"
+        placeholder="Ex: 2023"
+      />
+      <mat-error *ngIf="form.get('ano')?.hasError('required')">
+        Ano é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('ano')?.hasError('min')">
+        Ano deve ser maior que 1900
+      </mat-error>
+      <mat-error *ngIf="form.get('ano')?.hasError('max')">
+        Ano não pode ser maior que o atual
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Cor</mat-label>
+      <input matInput formControlName="cor" placeholder="Ex: Prata" />
+      <mat-error *ngIf="form.get('cor')?.hasError('required')">
+        Cor é obrigatória
+      </mat-error>
+    </mat-form-field>
 
     <div class="button-group">
       <button
@@ -21,10 +88,18 @@
         color="primary"
         type="submit"
         [disabled]="form.invalid"
+        class="confirm-button"
       >
+        <mat-icon>{{ isEdit ? "edit" : "save" }}</mat-icon>
         {{ isEdit ? "Atualizar" : "Salvar" }}
       </button>
-      <button mat-raised-button type="button" routerLink="/veiculos">
+      <button
+        mat-raised-button
+        type="button"
+        routerLink="/veiculos"
+        class="cancel-button"
+      >
+        <mat-icon>close</mat-icon>
         Cancelar
       </button>
     </div>
