@@ -38,14 +38,14 @@
       <td mat-cell *matCellDef="let vehicle">
         <button
           mat-icon-button
-          color="primary"
-          [routerLink]="['/veiculos', vehicle.id]"
+          class="edit-button"
+          [routerLink]="['/veiculos/editar', vehicle.id]"
         >
           <mat-icon>edit</mat-icon>
         </button>
         <button
           mat-icon-button
-          color="warn"
+          class="delete-button"
           (click)="deleteVehicle(vehicle.id)"
         >
           <mat-icon>delete</mat-icon>
