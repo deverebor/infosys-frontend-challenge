@@ -1,20 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { IVehicleModel } from '../../models/vehicle.model';
-import { VehicleService } from '../../services/vehicle.service';
-import { MatTableModule } from '@angular/material/table';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { VehicleService } from '../../services/vehicle.service';
+import { IVehicleModel } from '../../models/vehicle.model';
 
 @Component({
   selector: 'app-vehicle-list',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.scss'],
-  imports: [MatTableModule, RouterModule, MatIconModule],
-  standalone: true,
 })
 export class VehicleListComponent implements OnInit {
-  vehicles: IVehicleModel[] = [];
-  displayedColumns: string[] = ['id', 'placa', 'modelo', 'marca', 'actions'];
+  displayedColumns: string[] = [
+    'placa',
+    'marca',
+    'modelo',
+    'ano',
+    'cor',
+    'actions',
+  ];
+  dataSource: IVehicleModel[] = [];
 
   constructor(private vehicleService: VehicleService) {}
 
@@ -23,18 +38,13 @@ export class VehicleListComponent implements OnInit {
   }
 
   loadVehicles(): void {
-    this.vehicleService
-      .getAll()
-      .subscribe((vehicles) => (this.vehicles = vehicles));
+    this.dataSource = this.vehicleService.getAll();
   }
 
   deleteVehicle(id: number): void {
     if (confirm('Tem certeza que deseja excluir este veículo?')) {
-      this.vehicleService.delete(id).subscribe((success) => {
-        if (success) {
-          this.loadVehicles();
-        }
-      });
+      this.vehicleService.delete(id);
+      this.loadVehicles();
     }
   }
 }
