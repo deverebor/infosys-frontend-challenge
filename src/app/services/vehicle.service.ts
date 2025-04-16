@@ -1,58 +1,45 @@
 import { Injectable } from '@angular/core';
 import { IVehicleModel } from '../models/vehicle.model';
-import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VehicleService {
-  private vehicles: IVehicleModel[] = [
-    {
-      id: 1,
-      placa: 'ABC-1234',
-      chassi: '9BWZZZ377VT004251',
-      renavam: '00123456789',
-      modelo: 'Gol',
-      marca: 'Volkswagen',
-      ano: 2020,
-    },
-    //@note(deverebor): add more mock values
-  ];
+  private readonly STORAGE_KEY = 'vehicles';
 
   constructor() {}
 
-  getAll(): Observable<IVehicleModel[]> {
-    return of(this.vehicles);
+  getAll(): IVehicleModel[] {
+    const vehicles = localStorage.getItem(this.STORAGE_KEY);
+    return vehicles ? JSON.parse(vehicles) : [];
   }
 
-  getById(id: number): Observable<IVehicleModel | undefined> {
-    const vehicle = this.vehicles.find((v) => v.id === id);
-    return of(vehicle);
+  getById(id: number): IVehicleModel | undefined {
+    const vehicles = this.getAll();
+    return vehicles.find((vehicle) => vehicle.id === id);
   }
 
-  create(vehicle: IVehicleModel): Observable<IVehicleModel> {
-    vehicle.id =
-      this.vehicles.length > 0
-        ? Math.max(...this.vehicles.map((v) => v.id)) + 1
-        : 1;
-    this.vehicles.push(vehicle);
-    return of(vehicle);
+  create(vehicle: IVehicleModel): void {
+    const vehicles = this.getAll();
+    const newId =
+      vehicles.length > 0 ? Math.max(...vehicles.map((v) => v.id)) + 1 : 1;
+    const newVehicle = { ...vehicle, id: newId };
+    vehicles.push(newVehicle);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(vehicles));
   }
 
-  update(vehicle: IVehicleModel): Observable<IVehicleModel> {
-    const index = this.vehicles.findIndex((v) => v.id === vehicle.id);
-    if (index >= 0) {
-      this.vehicles[index] = vehicle;
+  update(vehicle: IVehicleModel): void {
+    const vehicles = this.getAll();
+    const index = vehicles.findIndex((v) => v.id === vehicle.id);
+    if (index !== -1) {
+      vehicles[index] = vehicle;
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(vehicles));
     }
-    return of(vehicle);
   }
 
-  delete(id: number): Observable<boolean> {
-    const index = this.vehicles.findIndex((v) => v.id === id);
-    if (index >= 0) {
-      this.vehicles.splice(index, 1);
-      return of(true);
-    }
-    return of(false);
+  delete(id: number): void {
+    const vehicles = this.getAll();
+    const filteredVehicles = vehicles.filter((vehicle) => vehicle.id !== id);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filteredVehicles));
   }
 }

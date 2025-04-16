@@ -1,17 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IVehicleModel } from '../../models/vehicle.model';
 import { VehicleService } from '../../services/vehicle.service';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-form',
   templateUrl: './vehicle-form.component.html',
   styleUrls: ['./vehicle-form.component.scss'],
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    RouterModule,
+  ],
   standalone: true,
 })
 export class VehicleFormComponent implements OnInit {
@@ -30,10 +46,13 @@ export class VehicleFormComponent implements OnInit {
         '',
         [Validators.required, Validators.pattern(/^[A-Z]{3}-?\d{4}$/)],
       ],
-      chassi: ['', Validators.required],
-      renavam: ['', Validators.required],
-      modelo: ['', Validators.required],
+      chassi: [
+        '',
+        [Validators.required, Validators.pattern(/^[A-HJ-NPR-Z0-9]{17}$/)],
+      ],
+      renavam: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
       marca: ['', Validators.required],
+      modelo: ['', Validators.required],
       ano: [
         '',
         [
@@ -42,6 +61,7 @@ export class VehicleFormComponent implements OnInit {
           Validators.max(new Date().getFullYear()),
         ],
       ],
+      cor: ['', Validators.required],
     });
   }
 
@@ -56,27 +76,26 @@ export class VehicleFormComponent implements OnInit {
   }
 
   loadVehicle(id: number): void {
-    this.vehicleService.getById(id).subscribe((vehicle) => {
-      if (vehicle) {
-        this.form.patchValue(vehicle);
-      }
-    });
+    const vehicle = this.vehicleService.getById(id);
+    if (vehicle) {
+      this.form.patchValue(vehicle);
+    }
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-      const vehicle: IVehicleModel = this.form.value;
+      const vehicle: IVehicleModel = {
+        ...this.form.value,
+        id: this.isEdit && this.vehicleId ? this.vehicleId : 0,
+      };
 
       if (this.isEdit && this.vehicleId) {
-        vehicle.id = this.vehicleId;
-        this.vehicleService.update(vehicle).subscribe(() => {
-          this.router.navigate(['/veiculos']);
-        });
+        this.vehicleService.update(vehicle);
       } else {
-        this.vehicleService.create(vehicle).subscribe(() => {
-          this.router.navigate(['/veiculos']);
-        });
+        this.vehicleService.create(vehicle);
       }
+
+      this.router.navigate(['/veiculos']);
     }
   }
 }

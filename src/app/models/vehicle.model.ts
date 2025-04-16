@@ -6,4 +6,5 @@ export interface IVehicleModel {
   modelo: string;
   marca: string;
   ano: number;
+  cor: string;
 }
